@@ -76,4 +76,19 @@ class UsersController extends APIController
             'mobile' => $request->mobile,
         ]);
     }
+
+    public function deleteUser(Request $request)
+    {
+        $this->validate($request , [
+            'id' => 'required',
+        ]);
+
+        $this->userRepository->delete();
+
+        return $this->responseSuccess('رمز عبور شما با موفقیت بروزرسانی شد' , [
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+        ]);
+    }
 }

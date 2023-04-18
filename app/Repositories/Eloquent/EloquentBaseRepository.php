@@ -46,4 +46,9 @@ class EloquentBaseRepository implements RepositoryInterface
     {
         return $this->model::find($id);
     }
+
+    public function deleteBy(array $where)
+    {
+        // TODO: Implement deleteBy() method.
+    }
 }
