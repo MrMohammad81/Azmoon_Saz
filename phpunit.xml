@@ -3,6 +3,7 @@
          xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
+         testdox="true"
 >
     <testsuites>
         <testsuite name="Application Test Suite">
@@ -15,3 +16,4 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
     </php>
 </phpunit>
+

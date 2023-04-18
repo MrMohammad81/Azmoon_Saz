@@ -18,7 +18,7 @@ class UsersTest extends TestCase
         $this->assertEquals(201 , $response->status());
         $this->seeJsonStructure([
             'success',
-            'massage',
+            'message',
             'data' => [
                 'full_name',
                 'email',
@@ -27,4 +27,13 @@ class UsersTest extends TestCase
             ]
         ]);
     }
+
+    public function test_it_must_throw_exception_if_we_dont_sent_parameters()
+    {
+        $response = $this->call('POST' , 'api/v1/users' ,[]);
+
+        $this->assertEquals(422 , $response->status());
+    }
+
+
 }
