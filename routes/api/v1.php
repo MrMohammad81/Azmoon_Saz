@@ -10,5 +10,6 @@ $router->group(['prefix' => 'api/v1'] , function () use ($router)
         $router->put('' , ['uses' => 'API\V1\Users\UsersController@updateInfo']);
         $router->put('change-password' , ['uses' => 'API\V1\Users\UsersController@updatePassword']);
         $router->delete('' , ['uses' => 'API\V1\Users\UsersController@deleteUser']);
+        $router->get('' , ['uses' => 'API\V1\Users\UsersController@index']);
     });
 });

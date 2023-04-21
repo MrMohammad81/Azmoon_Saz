@@ -10,7 +10,7 @@ class UsersTest extends TestCase
     {
         $response = $this->call('POST' , 'api/v1/users' , [
             'full_name' => 'Mohammad',
-            'email' => 'mohammad@gmail.com',
+            'email' => 'RezaMajidi@gmail.com',
             'mobile' => '0930655622',
             'password' => '123456'
         ]);
@@ -93,7 +93,7 @@ class UsersTest extends TestCase
     public function test_should_delete_a_user()
     {
         $response = $this->call('DELETE' , 'api/v1/users' , [
-            'id' => '74'
+            'id' => '471'
         ]);
 
         $this->assertEquals(200 , $response->status());
@@ -104,4 +104,43 @@ class UsersTest extends TestCase
         ]);
     }
 
+     public function test_should_get_users()
+     {
+         $pagesize = 20;
+         $response = $this->call('GET' , 'api/v1/users' , [
+             'page' => 1,
+             'pagesize' => $pagesize
+         ]);
+
+         $data = json_decode($response->getContent() , true);
+
+         $this->assertEquals($pagesize , count($data['data']));
+         $this->assertEquals(200 , $response->status());
+         $this->seeJsonStructure([
+             'success',
+             'message',
+             'data'
+         ]);
+     }
+
+     public function test_should_filtered_users()
+     {
+         $pagesize = 20;
+         $userEmail = 'mohammad@gmail.com';
+         $response = $this->call('GET' , 'api/v1/users' , [
+             'search' => $userEmail ,
+             'page' => 1,
+             'pagesize' => $pagesize
+         ]);
+
+         $data = json_decode($response->getContent() , true);
+
+         $this->assertEquals(200 , $response->status());
+         $this->seeJsonStructure([
+             'success',
+             'message',
+             'data'
+         ]);
+         $this->assertEquals($data['data']['email'] , $userEmail);
+     }
 }

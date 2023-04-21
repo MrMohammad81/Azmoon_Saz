@@ -9,7 +9,7 @@ class JsonBaseRepository implements UserRepositoryInterface
 
     public function create(array $data)
     {
-        if (file_exists('users.json'))
+        if (file_exists(base_path().'/users.json'))
         {
           $users = json_decode(file_get_contents('users.json') , true);
           $data['id'] = rand(1 , 1000);
@@ -20,13 +20,13 @@ class JsonBaseRepository implements UserRepositoryInterface
             $users = [];
             $data['id'] = rand(1 , 1000);
             array_push($users , $data);
-            file_put_contents('users.json' , json_encode($users));
+            file_put_contents(base_path().'/users.json' , json_encode($users));
         }
     }
 
     public function update(int $id, array $data)
     {
-        $users = json_decode(file_get_contents('users.json') , true);
+        $users = json_decode(file_get_contents(base_path().'/users.json') , true);
 
         foreach ($users as $key => $user)
         {
@@ -65,7 +65,7 @@ class JsonBaseRepository implements UserRepositoryInterface
 
     public function delete(int $id)
     {
-        $users = json_decode(file_get_contents('users.json') , true);
+        $users = json_decode(file_get_contents(base_path() . '/users.json') , true);
 
         foreach ($users as $key => $user)
         {
@@ -75,10 +75,10 @@ class JsonBaseRepository implements UserRepositoryInterface
 
                 if (file_exists('users.json'))
                 {
-                    unlink('users.json');
+                    unlink(base_path().'/users.json');
                 }
 
-                file_put_contents('user.json' , json_encode($users));
+                file_put_contents(base_path().'/users.json' , json_encode($users));
                 break;
             }
         }
@@ -87,5 +87,38 @@ class JsonBaseRepository implements UserRepositoryInterface
     public function find(int $id)
     {
         // TODO: Implement find() method.
+    }
+
+    public function paginate(string $search = null , int $page, int $pagesize = 20)
+    {
+        $users = json_decode(file_get_contents(base_path().'/users.json') , true);
+
+        if (!is_null($search))
+        {
+            foreach ($users as $key => $user)
+            {
+                if (array_search($search , $user))
+                {
+                    return $users[$key];
+                }
+            }
+        }
+
+        $totalRecords = count($users);
+        $totalPages = ceil($totalRecords / $pagesize);
+
+        if ($page > $totalPages)
+        {
+            $page = $totalRecords;
+        }
+
+        if ($page < 1)
+        {
+            $page = 1;
+        }
+
+        $offset = ($page - 1) * $pagesize;
+
+        return array_slice($users , $offset , $pagesize);
     }
 }

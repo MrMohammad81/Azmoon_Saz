@@ -12,6 +12,19 @@ class UsersController extends APIController
     {
     }
 
+    public function index(Request $request)
+    {
+        $this->validate($request , [
+            'search' => 'nullable',
+            'page' => 'required|numeric',
+            'pagesize' => 'nullable|numeric',
+        ]);
+
+        $users = $this->userRepository->paginate($request->search ?? '', $request->page , $request->pagesize ?? 20);
+
+        return $this->responseSuccess('کاربران', $users);
+    }
+
     public function store(Request $request)
     {
         $this->validate($request , [
@@ -83,9 +96,9 @@ class UsersController extends APIController
             'id' => 'required',
         ]);
 
-        $this->userRepository->delete();
+        $this->userRepository->delete($request->id);
 
-        return $this->responseSuccess('رمز عبور شما با موفقیت بروزرسانی شد' , [
+        return $this->responseSuccess('کاربر مورد نظر با موفقیت حذف شد' , [
             'full_name' => $request->full_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
